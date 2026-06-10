@@ -75,6 +75,12 @@ n_sims = st.sidebar.select_slider("Simulations", [1000, 5000, 10000, 50000], val
 min_edge = st.sidebar.slider("Min edge % (value bets)", 0, 30, 5)
 bookmaker = st.sidebar.selectbox("Bookmaker", ["williamhill", "paddypower", "betway", "pinnacle", "draftkings", "betmgm", "best available"], index=0)
 
+st.sidebar.divider()
+st.sidebar.caption(
+    "**Model note:** Bosnia & Herzegovina and Curacao have little international match history "
+    "so the model rates them at league-average strength. Their odds may be less reliable than other teams."
+)
+
 # ── Page: Today's Value Bets ──────────────────────────────────────────────────
 
 if page == "Today's Value Bets":

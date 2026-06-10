@@ -87,7 +87,7 @@ if page == "Today's Value Bets":
     st.title("Today's Value Bets")
 
     date_input = st.date_input("Date", value=date.today())
-    days_ahead = st.number_input("Days ahead", min_value=1, max_value=7, value=1)
+    days_ahead = st.number_input("Days ahead", min_value=1, max_value=7, value=3)
 
     model, elo_dict = get_model()
     events = get_odds()

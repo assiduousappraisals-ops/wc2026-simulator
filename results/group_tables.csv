@@ -1,0 +1,49 @@
+group,team,p_advance
+A,Uruguay,0.9595
+A,United States,0.8402
+A,Panama,0.4343
+A,Bolivia,0.4034
+B,Argentina,0.9756
+B,Canada,0.5909
+B,Chile,0.5302
+B,Peru,0.4927
+C,Mexico,0.922
+C,Ecuador,0.9149
+C,Venezuela,0.7044
+C,Jamaica,0.1603
+D,Brazil,0.9481
+D,Colombia,0.8911
+D,Paraguay,0.5656
+D,Costa Rica,0.2266
+E,Spain,0.8471
+E,Belgium,0.6703
+E,Morocco,0.6539
+E,Croatia,0.5422
+F,Germany,0.9038
+F,Japan,0.8223
+F,Australia,0.6468
+F,Saudi Arabia,0.3069
+G,Portugal,0.9415
+G,Turkey,0.6449
+G,Poland,0.5889
+G,Czech Republic,0.4956
+H,Netherlands,0.9601
+H,Senegal,0.8662
+H,Cameroon,0.6116
+H,Qatar,0.2127
+I,France,0.9726
+I,Algeria,0.8283
+I,South Korea,0.6348
+I,New Zealand,0.2062
+J,England,0.9512
+J,Nigeria,0.6617
+J,Serbia,0.5535
+J,South Africa,0.4858
+K,Italy,0.9233
+K,Ukraine,0.6697
+K,Slovenia,0.6292
+K,Albania,0.4113
+L,Switzerland,0.9803
+L,Hungary,0.9169
+L,Tunisia,0.863
+L,Cuba,0.0376

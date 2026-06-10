@@ -111,18 +111,18 @@ def get_elo_dict(cache_path: Path = config.ELO_CACHE_CSV,
 # Draw finalized January 2026. Source: FIFA.com official draw results.
 
 GROUPS: dict[str, list[str]] = {
-    "A": ["United States", "Panama", "Uruguay", "Bolivia"],
-    "B": ["Argentina", "Chile", "Peru", "Canada"],          # Canada co-host bump applies
-    "C": ["Mexico", "Jamaica", "Venezuela", "Ecuador"],      # Mexico co-host bump applies
-    "D": ["Brazil", "Colombia", "Costa Rica", "Paraguay"],
-    "E": ["Spain", "Croatia", "Morocco", "Belgium"],
-    "F": ["Germany", "Japan", "Australia", "Saudi Arabia"],
-    "G": ["Portugal", "Poland", "Turkey", "Czech Republic"],
-    "H": ["Netherlands", "Senegal", "Cameroon", "Qatar"],
-    "I": ["France", "Algeria", "South Korea", "New Zealand"],
-    "J": ["England", "Nigeria", "Serbia", "South Africa"],
-    "K": ["Italy", "Albania", "Slovenia", "Ukraine"],        # placeholder — verify against FIFA.com
-    "L": ["Switzerland", "Hungary", "Tunisia", "Cuba"],
+    "A": ["Mexico", "South Africa", "South Korea", "Czech Republic"],
+    "B": ["Canada", "Bosnia & Herzegovina", "Qatar", "Switzerland"],
+    "C": ["United States", "Paraguay", "Australia", "Turkey"],
+    "D": ["Brazil", "Morocco", "Haiti", "Scotland"],
+    "E": ["Germany", "Curacao", "Netherlands", "Japan"],
+    "F": ["Sweden", "Tunisia", "Spain", "Cape Verde"],
+    "G": ["Belgium", "Egypt", "Saudi Arabia", "Uruguay"],
+    "H": ["Iran", "New Zealand", "France", "Senegal"],
+    "I": ["Iraq", "Norway", "Argentina", "Algeria"],
+    "J": ["Austria", "Jordan", "Portugal", "Uzbekistan"],
+    "K": ["England", "Croatia", "Ghana", "Panama"],
+    "L": ["Colombia", "DR Congo", "Ecuador", "Ivory Coast"],
 }
 
 # NOTE: The official 2026 draw was held December 5, 2025.

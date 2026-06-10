@@ -122,10 +122,15 @@ _API_NAME_MAP: dict[str, str] = {
     "IR Iran": "Iran",
     "Korea Republic": "South Korea",
     "Republic of Korea": "South Korea",
-    "Korea DPR": "North Korea",
-    "Ivory Coast": "Ivory Coast",
     "Côte d'Ivoire": "Ivory Coast",
+    "Cote d'Ivoire": "Ivory Coast",
+    "Bosnia & Herzegovina": "Bosnia & Herzegovina",
+    "Bosnia and Herzegovina": "Bosnia & Herzegovina",
     "DR Congo": "DR Congo",
+    "Congo DR": "DR Congo",
+    "Democratic Republic of Congo": "DR Congo",
+    "Curaçao": "Curacao",
+    "Cape Verde Islands": "Cape Verde",
     "Draw": "Draw",
 }
 

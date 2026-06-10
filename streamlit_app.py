@@ -3,7 +3,10 @@
 """
 
 import sys
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
+
+ADT = ZoneInfo("America/Halifax")  # Atlantic Daylight Time (Nova Scotia)
 from pathlib import Path
 
 import pandas as pd
@@ -98,9 +101,8 @@ if page == "Today's Value Bets":
     day_events = []
     for ev in events:
         try:
-            ev_date = datetime.fromisoformat(
-                ev["commence_time"].replace("Z", "+00:00")
-            ).date()
+            ev_utc = datetime.fromisoformat(ev["commence_time"].replace("Z", "+00:00"))
+            ev_date = ev_utc.astimezone(ADT).date()  # filter by Atlantic date
         except Exception:
             continue
         if target <= ev_date <= end:
@@ -118,7 +120,8 @@ if page == "Today's Value Bets":
             home, away = result["home"], result["away"]
             try:
                 dt = datetime.fromisoformat(ev["commence_time"].replace("Z", "+00:00"))
-                dt_str = dt.strftime("%b %d  %H:%M UTC")
+                dt_local = dt.astimezone(ADT)
+                dt_str = dt_local.strftime("%b %d  %I:%M %p ADT")
             except Exception:
                 dt_str = ev.get("commence_time", "")
 

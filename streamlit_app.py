@@ -73,7 +73,7 @@ page = st.sidebar.radio("View", ["Today's Value Bets", "Tournament Odds", "Group
 
 n_sims = st.sidebar.select_slider("Simulations", [1000, 5000, 10000, 50000], value=10000)
 min_edge = st.sidebar.slider("Min edge % (value bets)", 0, 30, 5)
-bookmaker = st.sidebar.selectbox("Bookmaker", ["bet365", "draftkings", "fanduel", "betmgm", "best available"], index=0)
+bookmaker = st.sidebar.selectbox("Bookmaker", ["williamhill", "paddypower", "betway", "pinnacle", "draftkings", "betmgm", "best available"], index=0)
 
 # ── Page: Today's Value Bets ──────────────────────────────────────────────────
 

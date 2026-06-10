@@ -78,7 +78,7 @@ def best_odds(bookmakers: list[dict], outcome_name: str,
                         best_book = bm.get("title", bm_key)
 
     if preferred_found and preferred_odds:
-        return preferred_odds, preferred
+        return preferred_odds, preferred.replace("williamhill", "William Hill").replace("paddypower", "Paddy Power").replace("betway", "Betway").replace("pinnacle", "Pinnacle")
     return (best or 2.0), best_book
 
 

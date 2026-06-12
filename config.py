@@ -32,9 +32,10 @@ SHOOTOUT_ELO_SCALE = 400.0           # Elo points → ±5 % win probability shif
 ELO_RATINGS_DATE = "2026-06-09"
 
 # ── The Odds API (optional calibration) ──────────────────────────────────────
-# Read from Streamlit secrets when deployed, fall back to local value
+_LOCAL_ODDS_KEY = "35dd97f59712d7bea34a9750d27d7e95"
 try:
     import streamlit as st
-    ODDS_API_KEY = st.secrets.get("ODDS_API_KEY", "35dd97f59712d7bea34a9750d27d7e95")
+    _secret = st.secrets.get("ODDS_API_KEY", "")
+    ODDS_API_KEY = _secret if _secret else _LOCAL_ODDS_KEY
 except Exception:
-    ODDS_API_KEY = "35dd97f59712d7bea34a9750d27d7e95"
+    ODDS_API_KEY = _LOCAL_ODDS_KEY

@@ -126,6 +126,7 @@ _API_NAME_MAP: dict[str, str] = {
     "Cote d'Ivoire": "Ivory Coast",
     "Bosnia & Herzegovina": "Bosnia & Herzegovina",
     "Bosnia and Herzegovina": "Bosnia & Herzegovina",
+    "Bosnia-Herzegovina": "Bosnia & Herzegovina",
     "DR Congo": "DR Congo",
     "Congo DR": "DR Congo",
     "Democratic Republic of Congo": "DR Congo",

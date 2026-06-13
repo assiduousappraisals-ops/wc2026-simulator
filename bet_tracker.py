@@ -15,7 +15,13 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 import requests
 
+import os
 import config
+
+# Allow GitHub Action to inject the API key via environment variable
+if os.environ.get("ODDS_API_KEY"):
+    config.ODDS_API_KEY = os.environ["ODDS_API_KEY"]
+
 from data_layer import load_results, compute_weights, get_elo_dict, all_teams
 from dixon_coles import DixonColesModel
 from daily_bets import fetch_odds, analyse_match, best_odds, normalise

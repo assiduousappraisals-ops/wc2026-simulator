@@ -1,0 +1,42 @@
+name: Daily Bet Logger
+
+on:
+  schedule:
+    # Runs at 8:00 AM ADT (11:00 UTC) every day during the tournament
+    - cron: '0 11 * * *'
+    # Also runs at 2:00 AM ADT (5:00 UTC) to catch late night results
+    - cron: '0 5 * * *'
+  workflow_dispatch:  # Allow manual trigger from GitHub UI
+
+jobs:
+  update-bets:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Log new value bets and resolve results
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python bet_tracker.py --all
+
+      - name: Commit updated bets log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/bets_log.csv
+          git diff --staged --quiet || git commit -m "Auto: update bets log $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push

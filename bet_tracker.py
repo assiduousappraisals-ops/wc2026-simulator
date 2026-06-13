@@ -86,6 +86,8 @@ def fetch_scores() -> dict[tuple[str, str], dict]:
     return results
 
 
+MAX_EDGE = 100.0  # cap — edges above this are model noise, not real value
+
 def log_todays_bets(min_edge: float = 5.0, stake: float = 10.0):
     """Log all value bets for today and next 2 days."""
     model = load_model()
@@ -104,7 +106,7 @@ def log_todays_bets(min_edge: float = 5.0, stake: float = 10.0):
         if not result:
             continue
 
-        for b in result["value_bets"]:
+        for b in [x for x in result["value_bets"] if x["edge_pct"] <= MAX_EDGE]:
             # Skip if already logged
             exists = (
                 (log["home"] == result["home"]) &

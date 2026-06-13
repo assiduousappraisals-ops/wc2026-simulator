@@ -72,7 +72,7 @@ def get_odds():
 
 st.sidebar.title("WC 2026 Simulator")
 st.sidebar.markdown("Dixon-Coles Monte Carlo")
-page = st.sidebar.radio("View", ["Today's Value Bets", "Tournament Odds", "Group Probabilities"])
+page = st.sidebar.radio("View", ["Today's Value Bets", "P&L Tracker", "Tournament Odds", "Group Probabilities"])
 
 n_sims = st.sidebar.select_slider("Simulations", [1000, 5000, 10000, 50000], value=10000)
 min_edge = st.sidebar.slider("Min edge % (value bets)", 0, 30, 5)
@@ -158,6 +158,120 @@ if page == "Today's Value Bets":
             st.info(f"No value bets found above {min_edge}% edge. Try lowering the threshold in the sidebar.")
         else:
             st.success(f"{value_count} value bet(s) flagged (green rows).")
+
+# ── Page: P&L Tracker ────────────────────────────────────────────────────────
+
+elif page == "P&L Tracker":
+    st.title("P&L Tracker")
+    st.caption("$10 flat stake on every value bet flagged by the model")
+
+    log_path = config.DATA_DIR / "bets_log.csv"
+
+    # Auto-resolve results from scores API
+    @st.cache_data(ttl=300)
+    def get_scores():
+        try:
+            r = requests.get(
+                f"https://api.the-odds-api.com/v4/sports/soccer_fifa_world_cup/scores",
+                params={"apiKey": config.ODDS_API_KEY, "daysFrom": 3},
+                timeout=15,
+            )
+            return r.json()
+        except Exception:
+            return []
+
+    from daily_bets import normalise as norm
+
+    def resolve_log(df):
+        scores_raw = get_scores()
+        scores = {}
+        for ev in scores_raw:
+            h = norm(ev.get("home_team", ""))
+            a = norm(ev.get("away_team", ""))
+            sc = {s["name"]: int(s["score"]) for s in (ev.get("scores") or [])}
+            scores[(h, a)] = {
+                "completed": ev.get("completed", False),
+                "home_score": sc.get(ev.get("home_team", ""), None),
+                "away_score": sc.get(ev.get("away_team", ""), None),
+            }
+
+        df = df.copy()
+        for i, row in df.iterrows():
+            if str(row.get("result", "")).strip() in ("W", "L"):
+                continue
+            home, away = str(row["home"]), str(row["away"])
+            score = scores.get((home, away)) or scores.get((away, home))
+            if not score or not score["completed"]:
+                continue
+            hs, as_ = score["home_score"], score["away_score"]
+            if hs is None or as_ is None:
+                continue
+            actual = home if hs > as_ else (away if as_ > hs else "Draw")
+            won = str(row["outcome"]) == actual
+            stake = float(row["stake"])
+            odds = float(row["odds"])
+            df.at[i, "result"] = "W" if won else "L"
+            df.at[i, "pnl"] = round(stake * (odds - 1), 2) if won else -stake
+        return df
+
+    if not log_path.exists():
+        st.info("No bets logged yet. Value bets will appear here automatically.")
+    else:
+        import requests as req_mod
+        import requests
+        df = pd.read_csv(log_path, dtype={"result": str, "pnl": str})
+        df["result"] = df["result"].fillna("").astype(str).str.strip()
+        df["pnl"] = df["pnl"].fillna("").astype(str).str.strip()
+        df = resolve_log(df)
+
+        resolved = df[df["result"].isin(["W", "L"])].copy()
+        pending = df[~df["result"].isin(["W", "L"])].copy()
+
+        # Summary metrics
+        if not resolved.empty:
+            resolved["pnl_f"] = resolved["pnl"].astype(float)
+            resolved["stake_f"] = resolved["stake"].astype(float)
+            wins = (resolved["result"] == "W").sum()
+            losses = (resolved["result"] == "L").sum()
+            total_staked = resolved["stake_f"].sum()
+            net_pnl = resolved["pnl_f"].sum()
+            roi = (net_pnl / total_staked * 100) if total_staked > 0 else 0
+
+            col1, col2, col3, col4 = st.columns(4)
+            col1.metric("Record", f"{wins}W - {losses}L")
+            col2.metric("Total Staked", f"${total_staked:.0f}")
+            col3.metric("Net P&L", f"${net_pnl:+.2f}")
+            col4.metric("ROI", f"{roi:+.1f}%")
+
+            st.divider()
+            st.subheader("Resolved Bets")
+            display = resolved[["match_date", "home", "away", "outcome", "odds", "edge_pct", "result", "pnl_f"]].copy()
+            display.columns = ["Date", "Home", "Away", "Bet", "Odds", "Edge %", "Result", "P&L"]
+            display["Edge %"] = display["Edge %"].apply(lambda x: f"+{x:.1f}%")
+            display["P&L"] = display["P&L"].apply(lambda x: f"${x:+.2f}")
+
+            def color_result(row):
+                if row["Result"] == "W":
+                    return ["background-color: #d4edda"] * len(row)
+                elif row["Result"] == "L":
+                    return ["background-color: #f8d7da"] * len(row)
+                return [""] * len(row)
+
+            st.dataframe(
+                display.style.apply(color_result, axis=1),
+                use_container_width=True, hide_index=True
+            )
+
+        if not pending.empty:
+            st.subheader("Pending Bets")
+            disp_p = pending[["match_date", "home", "away", "outcome", "odds", "edge_pct"]].copy()
+            disp_p.columns = ["Date", "Home", "Away", "Bet", "Odds", "Edge %"]
+            disp_p["Edge %"] = disp_p["Edge %"].apply(lambda x: f"+{float(x):.1f}%")
+            st.dataframe(disp_p, use_container_width=True, hide_index=True)
+
+        if resolved.empty and pending.empty:
+            st.info("No bets logged yet.")
+
 
 # ── Page: Tournament Odds ─────────────────────────────────────────────────────
 
